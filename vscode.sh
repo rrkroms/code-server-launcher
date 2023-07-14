@@ -9,20 +9,22 @@ if [[ -e ${PREFIX}/bin/proot-distro && -e ${DISTRO_DIR}/usr/bin/code-server ]] ;
 	tell s "code-server successfully launched."
 else
 	[ ! -e $PREFIX/bin/proot-distro ] &&
-	tell f "proot-distro not exitestt"
-
+	tell f "ERROR: The 'proot-distro' package is not installed. To run Ubuntu distro, please install it." && 
+	tell d "USAGE: 'pkg install proot-ditro' to install proot-distro"
+	echo
 	[ ! -e ${DISTRO_DIR} ] &&
-	tell f " ubuntu distro not found"
-
+	tell f "ERROR: 'ubuntu' distro is not installed. To run code-server, please install it." &&
+	tell d "USAGE: 'proot-distro install ubuntu' to install Ubuntu distro"
+	echo
 	[ ! -e ${DISTRO_DIR}/usr/bin/code-server ] &&
-	tell f "code-server not found, maybe code-server not install in ubuntu distro?"
-
+	tell f "ERROR: 'code-server' package is not installed on ubuntu distro." &&
+	tell d "USAGE: proot-distro login ubuntu -- apt update && proot-distro login ubuntu -- apt install code-server \n     to install code-server in Ubuntu distro."
 fi
 }
 
 stop (){
 task_list="$(pgrep -x node 2>/dev/null)"
-[ -z "$task_list" ] && tell f "code-server not running in background" 
+[ -z "$task_list" ] && tell f "code-server is not running in background" 
 pkill -x node
 }
 
