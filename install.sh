@@ -22,15 +22,19 @@ remove_launcher() {
         tell f "code-server launcher dos'not exiest!"
     fi
 }
-
-case $1 in
--i) create_launcher ;;
--r) remove_launcher $@ ;;
---help) help ;;
-*) echo "
+help() {
+    echo "
+this is code-server launcher manager to help to install code-server and its accessories 
+		
 USAGE : $0 [OPTIONS]
 
 OPTION 		MEANING
 -i	 	install code-server launcher
--r 		remove  code-server launcher";;
+-r 		remove  code-server launcher"
+}
+case $1 in
+-i) create_launcher ;;
+-r) remove_launcher $@ ;;
+--help) help ;;
+*) tell i "worng argument \n ${yellow} use ${0} --help" ;;
 esac
