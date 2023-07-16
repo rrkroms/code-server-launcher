@@ -1,5 +1,5 @@
 #!/bin/bash
-source rom_ui
+source ~/.roms/bash/rom_ui
 DISTRO_DIR="${PREFIX}/var/lib/proot-distro/installed-rootfs/ubuntu"
 
 start (){

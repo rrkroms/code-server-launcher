@@ -13,8 +13,10 @@
 
 ## setup launcher
 - `install` code-server browser [apk](app/code-server_1.apk).
-- run `chmod -x ./code.sh` to make executable.
+- run `chmod -x ./install.sh` to make executable.
+- run `./install.sh -i` to install `code-server-launcher`
+- run `./install.sh -r` to uninstall `code-server-launcher`(This command can't remove the code-server package and the linux distro)
 
-## usage
+## launcher option's usage
 - run `./vscode.sh -s` to start code-server with code-server web viewer app
 - run `./vscode.sh -q` to stop/kill code-server

@@ -7,6 +7,41 @@ yellow='\033[1;33m'
 blue='\033[1;34m'
 light_cyan='\033[1;96m'
 reset='\033[0m'
+ask() {
+    #function_version_0.1-alpha
+    while true; do
+
+        if [ "${2:-}" = "Y" ]; then
+            prompt="Y/n"
+            default=Y
+        elif [ "${2:-}" = "N" ]; then
+            prompt="y/N"
+            default=N
+        else
+            prompt="y/n"
+            default=
+        fi
+
+        # Ask the question
+        [[ $1 == "i" ]] && msg=" ${yellow} ⃝¡ "
+        [[ $1 == "w" ]] && msg=" ${yesgw} ⃝? "
+
+        printf "${msg}${blue}"
+        read -p "$3 [$prompt] " REPLY
+
+        # Default?
+        if [ -z "$REPLY" ]; then
+            REPLY=$default
+        fi
+
+        printf "${reset}\n\n"
+        # Check if the reply is valid
+        case "$REPLY" in
+        Y* | y*) [[ $4 == "r" ]] && return 1 || return 0 ;;
+        N* | n*) [[ $4 == "r" ]] && return 0 || return 1 ;;
+        esac
+    done
+}
 
 tell () {
 #function_version: v0.1-alpha
