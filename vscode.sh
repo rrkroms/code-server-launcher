@@ -14,7 +14,7 @@ elif [[ "$1" == "-"*"u"* ]]; then
 	DISTRO_LAUNCHER=proot-distro
 	DISTRO_LAUNCHER_COM="proot-distro login ${DISTRO_NAME} --"
 	SOLVE_DISTRO='Usage: `proot-distro install ubuntu` to install ${DISTRO_NAME}'
-	SOLVE_CODE_SERVER="Usage: `proot-distro login ubuntu -- apt update && proot-distro login ubuntu -- apt install code-server` \n     to install code-server in Ubuntu distro."
+	SOLVE_CODE_SERVER='Usage: `proot-distro login ubuntu -- apt update && proot-distro login ubuntu -- apt install code-server` \n     to install code-server in Ubuntu distro.'
 fi
 
 start() {
