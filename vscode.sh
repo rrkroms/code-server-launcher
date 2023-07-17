@@ -1,9 +1,11 @@
 #!/bin/bash
 source rom_ui
+source roms_bash_plugin
 
 if [[ "$1" == "-"*"k"* ]]; then
+	get_arch
 	DISTRO_NAME="kali linux"
-	DISTRO_DIR=/data/data/com.termux/files//home/kali-arm64
+	DISTRO_DIR=/data/data/com.termux/files//home/kali-${SYS_ARCH}
 	DISTRO_LAUNCHER="nh"
 	DISTRO_LAUNCHER_COM=nh
 	SOLVE_DISTRO="Follow: README.md file to install kali linux with setup for vscode launcher."
@@ -51,7 +53,7 @@ case $1 in
 	launcher command:
 	 Ex: [ -ku|-su|-us|-uk|-s|-q ] [\$3]
 	\$3    argument/option for code-server
-	-s 	start code-server
+	-s 	start code-server 
 	-q	stop code-server
 	-u 	use ubuntu proot
 	-k 	use kali linux proot"
