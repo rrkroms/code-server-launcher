@@ -47,12 +47,12 @@ stop() {
 
 case $1 in
 *q*) stop ;;
-*s*) start ;;
+*s*) start $2;;
 *)
 	echo " 	thats programme help to easy to launch vscode server(code-server)
 	launcher command:
-	 Ex: [ -ku|-su|-us|-uk|-s|-q ] [\$3]
-	\$3    argument/option for code-server
+	 Ex: [ -ku|-su|-us|-uk|-s|-q ] [\$2]
+	\$2    argument/option for code-server
 	-s 	start code-server 
 	-q	stop code-server
 	-u 	use ubuntu proot
