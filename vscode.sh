@@ -27,15 +27,15 @@ start() {
 	else
 		[[ "${DISTRO_LAUNCHER}" == "proot-distro" && ! -e ${PREFIX}/bin/proot-distro ]] &&
 			tell f "Error: The 'proot-distro' package is not installed. To run ${DISTRO_NAME} distro, please install it." &&
-			tell d "Usage: 'pkg install proot-ditro' to install proot-distro \n"
+			tell d "Usage: 'pkg install proot-ditro' to install proot-distro \n" && exit
 		
 		[ ! -e ${DISTRO_DIR} ] &&
 			tell f "Error: '${DISTRO_NAME}' distro is not installed. To run code-server, please install it." &&
-			tell d "${SOLVE_DISTRO} \n"
+			tell d "${SOLVE_DISTRO} \n" && exit
 		
 		[ ! -e ${DISTRO_DIR}/usr/bin/code-server ] &&
 			tell f "Error: 'code-server' package is not installed on ${DISTRO_NAME} distro." &&
-			tell d "${SOLVE_CODE_SERVER} \n"
+			tell d "${SOLVE_CODE_SERVER} \n" && exit
 	fi
 }
 
