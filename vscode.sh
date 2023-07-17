@@ -33,7 +33,7 @@ start() {
 			tell f "Error: '${DISTRO_NAME}' distro is not installed. To run code-server, please install it." &&
 			tell d "${SOLVE_DISTRO} \n" && exit
 		
-		[ ! -e ${DISTRO_DIR}/usr/bin/code-server ] &&
+		[[ -e ${DISTRO_DIR} && ! -e ${DISTRO_DIR}/usr/bin/code-server ]] &&
 			tell f "Error: 'code-server' package is not installed on ${DISTRO_NAME} distro." &&
 			tell d "${SOLVE_CODE_SERVER} \n" && exit
 	fi
