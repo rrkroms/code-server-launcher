@@ -17,6 +17,12 @@ elif [[ "$1" == "-"*"u"* ]]; then
 	DISTRO_LAUNCHER_COM="proot-distro login ${DISTRO_NAME} --"
 	SOLVE_DISTRO='Usage: `proot-distro install ubuntu` to install ${DISTRO_NAME}'
 	SOLVE_CODE_SERVER='Usage: `proot-distro login ubuntu -- apt update && proot-distro login ubuntu -- apt install code-server` \n     to install code-server in Ubuntu distro.'
+elif [[ "$1" == "-s" ]] ; then
+	tell f "please specifying distro option:"
+	echo "Usage: $0 [ -sk|-ks|-us|-su ]
+	option		meaning
+	u		ubuntu
+	k		kali"
 fi
 
 start() {
@@ -46,8 +52,8 @@ stop() {
 }
 
 case $1 in
-*q*) stop ;;
-*s*) start $2;;
+-*q*) stop ;;
+-*s*) start $2;;
 *)
 	echo " 	thats programme help to easy to launch vscode server(code-server)
 	launcher command:
