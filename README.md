@@ -12,7 +12,8 @@ this script/programme help to make easy to use code-server in android/termux.
 ```
 bash ./install.sh -i
 ```
-
+- step 3 
+install application ./app/code-server_1.apk
 ## uninstalltion
 
 ```
