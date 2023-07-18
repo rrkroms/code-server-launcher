@@ -27,11 +27,13 @@ fi
 
 source ~/.roms/bash/rom_ui
 
-andro_launch(){
+web_launcher(){
 
 local servername=localhost:8080
-        [ curl --head --silent --fail \${servername} 2> /dev/null ] &&
-        am start --user 0 -n org.chromium.webapk.a18f37c7c4dc2dd10_v2/org.chromium.webapk.shell_apk.h2o.H2OTransparentLauncherActivity
+        curl --head --silent --fail \${servername} 2> /dev/null &&
+        am start --user 0 -n org.chromium.webapk.a18f37c7c4dc2dd10_v2/org.chromium.webapk.shell_apk.h2o.H2OTransparentLauncherActivity ||
+		tell f "code-server not running"
+
 }
 start (){
 echo "$CHROOT_NAME $CHROOT_LAUNCHER"
@@ -59,6 +61,7 @@ pkill -x node
 case \$1 in
 *q* ) stop ;;
 *s* ) start ;;
+-l ) web_launcher ;;
 * )
  echo " 
 this programme help to easy to launch vsode server(code-server)
@@ -66,11 +69,13 @@ this programme help to easy to launch vsode server(code-server)
 USAGE: \$0 [OPTIONS] [code-server's options]
 
 OPTIONS		MEANING
+
 -u 		use ubuntu proot
 -k 		use kali linux proot
-\\$3  	argumment for code-server
+\\\$3  	argumment for code-server
 -s  	start code-server
--q		stop code-server" ;;
+-q		stop code-server
+-l 		launch server app/browser";;
 esac
 EOF
 
