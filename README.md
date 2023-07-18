@@ -1,6 +1,14 @@
 >**DISCLAIMER:** THIS IS AN ALPHA/EXPERIMENTAL VERSION.
 ## support/Requirements
 - ubuntu distro(`proot-distro`)
+- proot-distro
+- termux
+
+## setup
+
+##### setup distro
+- install `proot-distro` : `pkg update && pkg install proot-distro`
+- install ubuntu distro : `proot-distro install ubuntu`
 
 ## setup launcher
 - `install` code-server browser [apk](app/code-server_1.apk).
