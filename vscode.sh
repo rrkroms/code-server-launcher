@@ -7,7 +7,7 @@ if [[ -e ${PREFIX}/bin/proot-distro && -e /data/data/com.termux/files/usr/var/li
 	tell s "code-server successfully launched."
 else
 	[ ! -e $PREFIX/bin/proot-distro ] &&
-	tell f " proot ${CHROOT_NAME} not exit" &&
+	tell f " proot ${CHROOT_NAME} not found"
 
 	[ ! -e '${CHROOT_DIR}/bin/code-server' ] &&
 	tell f "code-server not found in ubuntu proot, maybe code-server not install in proot?"
