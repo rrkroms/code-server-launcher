@@ -25,6 +25,15 @@ elif [[ "$1" == "-s" ]] ; then
 	k		kali"
 fi
 
+web_launcher(){
+
+	local servername=localhost:8080 # default code-server's HTTP SERVER
+    curl --head --silent --fail ${servername} 2> /dev/null &&
+    am start --user 0 -n org.chromium.webapk.a18f37c7c4dc2dd10_v2/org.chromium.webapk.shell_apk.h2o.H2OTransparentLauncherActivity ||
+	tell f "code-server is not running" &&
+	tell d "Usage: '$0 -s' to start code-server"
+}
+
 start() {
 	if [[ -e ${PREFIX}/bin/${DISTRO_LAUNCHER} && -e ${DISTRO_DIR}/usr/bin/code-server ]]; then
 		tell i "launching code-server by ${DISTRO_NAME} proot!"
@@ -54,14 +63,16 @@ stop() {
 case $1 in
 -*q*) stop ;;
 -*s*) start $2;;
+-l ) web_launcher ;;
 *)
 	echo " 	thats programme help to easy to launch vscode server(code-server)
 	launcher command:
-	 Ex: [ -ku|-su|-us|-uk|-s|-q ] [\$2]
+	 Ex: [ -ku|-su|-us|-uk|-s|-q|-l ] [\$2]
 	\$2    argument/option for code-server
 	-s 	start code-server 
 	-q	stop code-server
 	-u 	use ubuntu proot
-	-k 	use kali linux proot"
+	-k 	use kali linux proot
+	-l	launch code-server web viewer app/browser"
 	;;
 esac
