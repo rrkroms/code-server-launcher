@@ -36,10 +36,9 @@ local servername=localhost:8080
 
 }
 start (){
-echo "$CHROOT_NAME $CHROOT_LAUNCHER"
 if [[ -e \${PREFIX}/bin/\${CHROOT_LAUNCHER} && -e \${CHROOT_DIR}/usr/bin/code-server ]] ; then
-	tell t "launching code-server by ${CHROOT_NAME} proot!"
-	\${CHROOT_LAUNCHER_COM} code-server \$2 & sleep 7 ; am start --user 0 -n org.chromium.webapk.a18f37c7c4dc2dd10_v2/org.chromium.webapk.shell_apk.h2o.H2OTransparentLauncherActivity
+	tell i "launching code-server by ${CHROOT_NAME} proot!"
+	\${CHROOT_LAUNCHER_COM} code-server \$1 & sleep 7 ; am start --user 0 -n org.chromium.webapk.a18f37c7c4dc2dd10_v2/org.chromium.webapk.shell_apk.h2o.H2OTransparentLauncherActivity
 	tell s "code-server successfully launched."
 else
 	[ ! -e \$PREFIX/bin/\${CHROOT_LAUNCHER} ] &&
@@ -58,24 +57,30 @@ taks_list=\$(pgrep -x node 2>/dev/null)
 pkill -x node
 }
 
-case \$1 in
-*q* ) stop ;;
-*s* ) start ;;
--l ) web_launcher ;;
-* )
- echo " 
-this programme help to easy to launch vsode server(code-server)
+help(){
+	echo " 
+this is code-server launcher manager, that help to launch code-server's web-server/app
+this programme help to easy to usage vsode server(code-server)
 
-USAGE: \$0 [OPTIONS] [code-server's options]
+USAGE: codeserver [OPTIONS] [code-server's options]
+NOTE: cs is codeserver's shortcut. 
 
 OPTIONS		MEANING
 
 -u 		use ubuntu proot
 -k 		use kali linux proot
-\\\$3  	argumment for code-server
--s  	start code-server
+-s  	 	start code-server
+\\\$3  	 	argumment for code-server (only work with -s/start option)
 -q		stop code-server
--l 		launch server app/browser";;
+-l 		launch server app/browser"
+}
+
+case \$1 in
+-q ) stop ;;
+-us | -ks ) start \$3 ;;
+-l ) web_launcher ;;
+--help ) help ;;
+*) tell d "usage: \$0 --help for help" ;;
 esac
 EOF
 
@@ -94,19 +99,24 @@ else
 	tell f "code-server launcher dos'not exiest!"
 fi
 }
+apk_installer (){
+	xdg-open app/code-server_1.apk
+}
 help(){
 	echo "
-this is code-server launcher manager to help to launcher code-server
+this is code-server launcher manager installer, that help to install code-server web-server/app launcher
 		
 USAGE : $0 [OPTIONS]
 
 OPTION 		MEANING
 -i	 	install code-server launcher
--r 		remove  code-server launcher"
+-r 		remove  code-server launcher
+-apk 		web app/browser install"
 }
 [[ $# -ne "1" && $# -ne "2" ]] && help && exit
 	case $1 in
 		-i) create_launcher ;;
+		-apk) apk_installer;;
 		-r) remove_launcher $@ ;;
 		--help) help ;;
 		*) tell i "worng argument \n ${yellow} use ${0} --help" 
