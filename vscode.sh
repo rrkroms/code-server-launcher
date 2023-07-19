@@ -5,10 +5,12 @@ DISTRO_DIR="${PREFIX}/var/lib/proot-distro/installed-rootfs/ubuntu"
 web_launcher(){
 
 local servername=localhost:8080 # default code-server's HTTP SERVER
-        curl --head --silent --fail ${servername} 2> /dev/null &&
-        am start --user 0 -n org.chromium.webapk.a18f37c7c4dc2dd10_v2/org.chromium.webapk.shell_apk.h2o.H2OTransparentLauncherActivity ||
-		tell f "code-server is not running" &&
-		tell d "Usage: '$0 -s' to start code-server"
+       if curl --head --silent --fail ${servername} 2> /dev/null ; then 
+	        am start --user 0 -n org.chromium.webapk.a18f37c7c4dc2dd10_v2/org.chromium.webapk.shell_apk.h2o.H2OTransparentLauncherActivity
+		else 
+			tell f "code-server is not running" &&
+			tell d "Usage: '$0 -s' to start code-server"
+		fi
 }
 start (){
 if [[ -e ${PREFIX}/bin/proot-distro && -e ${DISTRO_DIR}/usr/bin/code-server ]] ; then
