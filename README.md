@@ -6,13 +6,14 @@
 - code-server
 
 ## setup
+- run `chmod -x ./install.sh` to make executable.
 
-##### setup distro
-- install `proot-distro` : `pkg update && pkg install proot-distro`
-- install ubuntu distro : `proot-distro install ubuntu`
+##### setup code-server
+- 1. run `install.sh -i --code-server`
+- 2. select ervairment for code-server package (recommend to select `linux distro ervairment`)
+
 
 ## setup launcher
-- run `chmod -x ./install.sh` to make executable.
 - run `./install.sh -i --apk` to install code-server web-viewer/browser 
 - run `./install.sh -i --launcher` to install `code-server-launcher`
 - run `./install.sh -r` to uninstall `code-server-launcher`(This command can't remove the code-server package and the linux distro)

@@ -1,0 +1,32 @@
+#!/bin/bash
+#version: v0.1
+check_pkg() {
+
+    for i in $@ ; do
+        if command -v "$i" &>/dev/null; then
+            tell s "${green}$i${blue} is installed."
+            exist_pkg+="$i "
+        else
+            tell f "${red}$i${blue} is not installed."
+            target_pkg+="$i "
+        fi
+    done
+    unset i
+}
+
+pkg_installer(){
+    check_pkg $1
+if [ -n "${target_pkg}" ] ; then
+        tell i "installing requied packages...."
+        printf ${green}
+        apt update
+        if apt install ${target_pkg} ; then
+            status=( "s" "successful." "0")
+        else
+            status=( "f" "faile!" "1")
+        fi
+        tell ${status[0]} "installtion ${status[1]}\n" ;
+        return ${status[2]}
+
+fi
+}

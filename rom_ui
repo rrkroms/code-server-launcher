@@ -47,6 +47,7 @@ tell () {
 #function_version: v0.1-alpha
     [[ $1 == "d" ]] && mgs="${yellow} >>${light_cyan} "
     [[ $1 == "i" ]] && mgs="${yellow}  ⃝¡${blue} "
+    [[ $1 == "a" ]] && mgs="${yellow}  ⃝?${blue} "
     [[ $1 == "s" ]] && mgs="${green} ✓⃝${light_cyan} "
     [[ $1 == "f" ]] && mgs="${red} ✗⃝ ${red} "
     printf "${mgs} ${2} ${reset}\n\n"
