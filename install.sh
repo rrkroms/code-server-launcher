@@ -53,7 +53,7 @@ fi
 }
 
 stop (){
-taks_list=$(pgrep -x node 2>/dev/null)
+taks_list=\$(pgrep -x node 2>/dev/null)
 [ ! -n \$task_list ] && echo "code-server not running in background" 
 pkill -x node
 }
