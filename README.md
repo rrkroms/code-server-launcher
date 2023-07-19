@@ -12,9 +12,9 @@
 - install ubuntu distro : `proot-distro install ubuntu`
 
 ## setup launcher
-- `install` code-server browser [apk](app/code-server_1.apk).
 - run `chmod -x ./install.sh` to make executable.
-- run `./install.sh -i` to install `code-server-launcher`
+- run `./install.sh -i --apk` to install code-server web-viewer/browser 
+- run `./install.sh -i --launcher` to install `code-server-launcher`
 - run `./install.sh -r` to uninstall `code-server-launcher`(This command can't remove the code-server package and the linux distro)
 
 ## launcher option's usage

@@ -22,6 +22,9 @@ remove_launcher() {
         tell f "code-server launcher dos'not exiest!"
     fi
 }
+apk_installer (){
+	xdg-open app/code-server_1.apk
+}
 help() {
     echo "
 this is code-server launcher manager to help to install code-server and its accessories 
@@ -30,10 +33,17 @@ USAGE : $0 [OPTIONS]
 
 OPTION 		MEANING
 -i	 	install code-server launcher
--r 		remove  code-server launcher"
+-r 		remove  code-server launcher
+
+[i] sub-option
+
+USAGE : $0 -i [SUB-OPTIONS]
+
+--launcher	install code-server web-server launcher
+--apk		install code-server web-server viewer app"
 }
 case $1 in
--i) create_launcher ;;
+-i) [[ -n $2 && "$2" == "--launcher" ]] && create_launcher && exit || [[ -n $2 && "$2" == "--apk" ]] && apk_installer && exit || [ -z $2 ] && help ;;
 -r) remove_launcher $@ ;;
 --help) help ;;
 *) tell i "worng argument \n ${yellow} use ${0} --help" ;;
