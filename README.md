@@ -18,3 +18,4 @@
 ## usage
 - run `./vscode.sh -s` to start code-server with code-server web viewer app
 - run `./vscode.sh -q` to stop/kill code-server
+- run `./vscode.sh -l` to launch code-server web viewer app
