@@ -21,8 +21,14 @@ install web-server apk/browser :
 ```
 
 ## uninstalltion
-
+>this command only remove code-server launcher( `cs`,`codeserver`) not a code-server packge.
 ```
 bash ./install.sh -r
 ```
+or
+> remove manually from `bin parth`, here is example of termux:
+```
+rm -rf $RPEFIX/bin/cs $PREFIX/bin/codeserver
+```
+
 > Note : use -y as $3 for pre-confession for uninstalltion 
