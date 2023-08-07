@@ -4,6 +4,70 @@ CS_LAUNCHER=${PREFIX}/bin/codeserver
 CS_SHORTCUT=${PREFIX}/bin/cs
 STYLE_DIR=~/.roms/bash/rom_ui
 
+installer (){
+	local os=$(uname -o) 
+	set_var() {
+		while [ -z "${VARIANT}" ]; do
+			if [ ${os} == "Android" ] ; then
+				printf "${blue}Which type of ervairment do you want for code-server?\n"
+				printf "${yellow}1. proot (recommend) \n"
+				printf "${yellow}2. termux package\n"
+				read -p "select code-server' ervairment : " choice
+				if [ "$choice" = "1" ]; then
+					printf "\nyou are choose code-server proot base ervairment.\n"
+					VARIANT=proot
+				elif [ "$choice" = "2" ] ; then
+					printf "you are choose code-server termux base package.\n"
+					VARIANT="termux"
+				fi
+			else 
+				tell f "you have already linux environment."
+				exit
+			fi
+			unset $choice
+		done
+	}
+	proot_installer(){
+
+		if [ ! -d $PREFIX/var/lib/proot-distro/installed-rootfs/ubuntu ] ; then
+			pkg_installer proot-distro
+			if proot-distro install ubuntu ;then
+				status=("s" "successful." "0")
+			else
+   				status=("f" "faile!" "1")
+			fi
+			tell ${status[0]} "ubuntu installtion ${status[1]}" return ${status[2]}
+		else
+			tell i "proot distro alredy installed." return 0
+		fi
+	}
+	cs_installer(){
+		if ! proot-distro login ubuntu -- command -v code-server ; then
+			tell i "installing code-server"
+			if 	proot-distro login ubuntu -- apt update && proot-distro login ubuntu -- apt install code-server -y ; then 
+				status=("s" "successful." "0")
+			else
+	   			status=("f" "faile!" "1")
+			fi
+			tell ${status[0]} "code-server installtion ${status[1]}" return ${status[2]}
+		else
+			tell i "code-server already installed"
+		fi
+	}
+	set_var
+	[ $VARIANT == "proot" ] && proot_installer && cs_installer
+	if [ $VARIANT == "termux" ] ; then
+		tell i "install code-server installing"
+		if apt install code-server ; then
+			status=("s" "successful." "0")
+		else
+			status=("f" "faile!" "1")
+		fi
+		tell ${status[0]} "code-server installtion ${status[1]}"
+		return ${status[2]}
+	fi
+}
+
 create_launcher(){
 cat > ${CS_LAUNCHER} <<-EOF
 #!/$PREFIX/bin/bash -e
@@ -84,11 +148,12 @@ case \$1 in
 esac
 EOF
 
-chmod 700 $CS_LAUNCHER
+	chmod 700 $CS_LAUNCHER
     [ -L ${CS_SHORTCUT} ] && rm -f ${CS_SHORTCUT} 
 	[ ! -f ${CS_SHORTCUT} ] && ln -s ${CS_LAUNCHER} ${CS_SHORTCUT} >/dev/null
     [ ! -d ~/.roms/bash/ ] && mkdir -p ~/.roms/bash/
     [ ! -e ${STYLE_DIR} ] && cp ./rom_ui ${STYLE_DIR}
+	tell i "code-server launcher created."
 }
 remove_launcher(){
 if [[ -e ${CS_LAUNCHER} ]] ; then
@@ -115,7 +180,7 @@ OPTION 		MEANING
 }
 [[ $# -ne "1" && $# -ne "2" ]] && help && exit
 	case $1 in
-		-i) create_launcher ;;
+		-i) [[ -n $2 && "$2" == "--launcher" ]] && create_launcher && exit || [[ -n $2 && "$2" == "--apk" ]] && apk_installer && exit || [ -z $2 ] && installer ;;
 		-apk) apk_installer;;
 		-r) remove_launcher $@ ;;
 		--help) help ;;
