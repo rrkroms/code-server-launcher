@@ -67,84 +67,117 @@ installer (){
 		return ${status[2]}
 	fi
 }
-
 create_launcher(){
 cat > ${CS_LAUNCHER} <<-EOF
-#!/$PREFIX/bin/bash -e
-if [[ "\$1" == "-"*"k"* ]] ; then
-	CHROOT_CODE_NAME=kali
-	CHROOT_USER_NAME=kali
-	CHROOT_NAME="kali linux"
-	CHROOT_DIR=/data/data/com.termux/files//home/kali-arm64
-	CHROOT_LAUNCHER="nh"
-	CHROOT_LAUNCHER_COM=nh
-else
-   if	[[ "\$1" == "-"*"u"* ]] ; then
+#!$PREFIX/bin/bash
+		
 	CHROOT_CODE_NAME=ubuntu
-        CHROOT_USER_NAME=ubuntu
-        CHROOT_NAME=ubuntu
-        CHROOT_DIR=/data/data/com.termux/files/usr/var/lib/proot-distro/installed-rootfs/ubuntu
-        CHROOT_LAUNCHER=proot-distro
+    CHROOT_USER_NAME=ubuntu
+    CHROOT_NAME=ubuntu
+    CHROOT_DIR=/data/data/com.termux/files/usr/var/lib/proot-distro/installed-rootfs/ubuntu
+    CHROOT_LAUNCHER=proot-distro
 	CHROOT_LAUNCHER_COM="proot-distro login \${CHROOT_NAME} --"
-   fi
-fi
+	CFG_DIR=~/.roms/cs
+	APK_PKG_NAME=\$(grep -oP '^package_name: \K(.*)' \$CFG_DIR/.config 2>/dev/null)
+	DEFUALT_LAUNCHER_PKG_NAME="org.chromium.webapk.a18f37c7c4dc2dd10_v2"
+	source ~/.roms/bash/rom_ui
 
-source ~/.roms/bash/rom_ui
+	config(){
+		create(){
+			local package=\$1
+			[ -z \$package ] && input d "inter apk package name: " "package"
+			[ "\$package" == "\${APK_PKG_NAME}" ] && tell f "package name already exiest" && exit
 
-web_launcher(){
+			[ -n \${APK_PKG_NAME} ] && sed -i "s/^package_name:.*/package_name: \$package/" "\$CFG_DIR/.config" ||
+			echo "package_name: \$package" >> \$CFG_DIR/.config &&
+	    	tell s "added package name: \$package "
+		}
 
-local servername=localhost:8080
-        curl --head --silent --fail \${servername} 2> /dev/null &&
-        am start --user 0 -n org.chromium.webapk.a18f37c7c4dc2dd10_v2/org.chromium.webapk.shell_apk.h2o.H2OTransparentLauncherActivity ||
-		tell f "code-server not running"
-
-}
+		reset (){
+			rm -rf ~/.roms/cs && tell s "configuration successfuly reset" && exit
+		}
+		\$@
+		if [ ! -e \$CFG_DIR ] ; then 
+			mkdir -p \$CFG_DIR/ && tell s "created configurantion DIRECTORY."
+		fi
+			if [[ ! -e \$CFG_DIR/.config && -z \$APK_PKG_NAME ]] ; then
+			echo "package_name: \$DEFUALT_LAUNCHER_PKG_NAME" > \$CFG_DIR/.config &&
+			tell s "configure apk default package name."
+		fi
+	}
 start (){
-if [[ -e \${PREFIX}/bin/\${CHROOT_LAUNCHER} && -e \${CHROOT_DIR}/usr/bin/code-server ]] ; then
-	tell i "launching code-server by ${CHROOT_NAME} proot!"
-	\${CHROOT_LAUNCHER_COM} code-server \$1 & sleep 7 ; am start --user 0 -n org.chromium.webapk.a18f37c7c4dc2dd10_v2/org.chromium.webapk.shell_apk.h2o.H2OTransparentLauncherActivity
-	tell s "code-server successfully launched."
-else
-	[ ! -e \$PREFIX/bin/\${CHROOT_LAUNCHER} ] &&
-	tell f " proot ${CHROOT_NAME} not exit" &&
+	web(){
+		local proces_name=node
+		local tar_dir=/usr/lib/code-server/lib/vscode/out/bootstrap-fork
+		local pid=\$(pgrep -f ".*$process_name.*$tar_dir")
+		local servername=localhost:8080
+		while true ; do
+			if [[ -n \${pid} ]] ; then
+				while true ; do
+					if curl --head --silent --fail \${servername} 2> /dev/null ; then
+						am start --user 0 -n \${APK_PKG_NAME}/org.chromium.webapk.shell_apk.h2o.H2OTransparentLauncherActivity
+						break
+					else
+						[ "\$1" == "-v" ] && tell f "code-server not alive on \${servername}"
+					fi
+					sleep 2
+				done
+				break
+			fi
+		done
+		unset pid
+	}
+	cs(){
+		if [[ -e \${PREFIX}/bin/\${CHROOT_LAUNCHER} && -e \${CHROOT_DIR}/usr/bin/code-server ]] ; then
+			tell i "launching code-server by ${CHROOT_NAME} proot!"
+			\${CHROOT_LAUNCHER_COM} code-server \$1 &&
+			tell s "code-server successfully launched."
+		else
+			[ ! -e \$PREFIX/bin/\${CHROOT_LAUNCHER} ] &&
+			tell f " proot ${CHROOT_NAME} not exit" &&
 
-	[ ! -e '${CHROOT_DIR}/bin/code-server' ] &&
-	echo "${CHROOT_DIR}/bin/code-server"
-	tell f "code-server not found in ${CHROOT_NAME} proot, maybe code-server not install in proot?"
+			[ ! -e '${CHROOT_DIR}/bin/code-server' ] &&
+			echo "${CHROOT_DIR}/bin/code-server"
+			tell f "code-server not found in ${CHROOT_NAME} proot, maybe code-server not install in proot?"
 
-fi
+		fi
+	}
+	\$@
 }
 
 stop (){
-taks_list=\$(pgrep -x node 2>/dev/null)
-[ ! -n \$task_list ] && echo "code-server not running in background" 
-pkill -x node
+	taks_list=\$(pgrep -x node 2>/dev/null)
+	[ ! -n \$task_list ] && echo "code-server not running in background" 
+	pkill -x node
+	exit
 }
 
 help(){
 	echo " 
-this is code-server launcher manager, that help to launch code-server's web-server/app
-this programme help to easy to usage vsode server(code-server)
+	this is code-server launcher manager, that help to launch code-server's web-server/app
+	this programme help to easy to usage vsode server(code-server)
 
-USAGE: codeserver [OPTIONS] [code-server's options]
-NOTE: cs is codeserver's shortcut. 
+	USAGE: codeserver [OPTIONS] [code-server's options]
+	NOTE: 'cs' is codeserver's shortcut. 
 
-OPTIONS		MEANING
+	OPTIONS		MEANING
 
--u 		use ubuntu proot
--k 		use kali linux proot
--s  	 	start code-server
-\\\$3  	 	argumment for code-server (only work with -s/start option)
--q		stop code-server
--l 		launch server app/browser"
+	-s  	 	start code-server
+	\\\$2  	 	argumment for code-server (only work with -s/start option)
+	-q		stop code-server
+	-l 		launch server app/browser
+	-c		configuration
+	-cr		reset configuration"
 }
 
 case \$1 in
--q ) stop ;;
--us | -ks ) start \$3 ;;
--l ) web_launcher ;;
---help ) help ;;
-*) tell d "usage: \$0 --help for help" ;;
+	-q ) stop ;;
+	-s ) start cs \$2 & start web ;;
+	-l ) start web -v ;;
+	-c ) config create \$2 ;;
+	-cr ) config reset \$2;;
+	--help ) help ;;
+	*) tell d "usage: \$0 --help for help" ;;
 esac
 EOF
 
@@ -153,8 +186,10 @@ EOF
 	[ ! -f ${CS_SHORTCUT} ] && ln -s ${CS_LAUNCHER} ${CS_SHORTCUT} >/dev/null
     [ ! -d ~/.roms/bash/ ] && mkdir -p ~/.roms/bash/
     [ ! -e ${STYLE_DIR} ] && cp ./rom_ui ${STYLE_DIR}
+
 	tell i "code-server launcher created."
 }
+
 remove_launcher(){
 if [[ -e ${CS_LAUNCHER} ]] ; then
 	[[ "$2" != "-y" ]] && ask i N "you want to remove code-server launcher" r && exit 
@@ -164,24 +199,28 @@ else
 	tell f "code-server launcher dos'not exiest!"
 fi
 }
-apk_installer (){
+
+apk_installer(){
 	xdg-open app/code-server_1.apk
 }
+
 help(){
 	echo "
 this is code-server launcher manager installer, that help to install code-server web-server/app launcher
 		
-USAGE : $0 [OPTIONS]
+USAGE : $0 [OPTION] [SUB-OPION]
 
 OPTION 		MEANING
 -i	 	install code-server launcher
 -r 		remove  code-server launcher
--apk 		web app/browser install"
+
+[-i] sub-option
+--launcher		install code-server web-server launcher
+--apk		install code-server web-server viewer app"
 }
 [[ $# -ne "1" && $# -ne "2" ]] && help && exit
 	case $1 in
 		-i) [[ -n $2 && "$2" == "--launcher" ]] && create_launcher && exit || [[ -n $2 && "$2" == "--apk" ]] && apk_installer && exit || [ -z $2 ] && installer ;;
-		-apk) apk_installer;;
 		-r) remove_launcher $@ ;;
 		--help) help ;;
 		*) tell i "worng argument \n ${yellow} use ${0} --help" 
