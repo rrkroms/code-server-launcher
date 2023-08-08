@@ -2,34 +2,49 @@
 source rom_ui
 DISTRO_DIR="${PREFIX}/var/lib/proot-distro/installed-rootfs/ubuntu"
 
-web_launcher(){
-
-local servername=localhost:8080 # default code-server's HTTP SERVER
-       if curl --head --silent --fail ${servername} 2> /dev/null ; then 
-	        am start --user 0 -n org.chromium.webapk.a18f37c7c4dc2dd10_v2/org.chromium.webapk.shell_apk.h2o.H2OTransparentLauncherActivity
-		else 
-			tell f "code-server is not running" &&
-			tell d "Usage: '$0 -s' to start code-server"
-		fi
-}
 start (){
-if [[ -e ${PREFIX}/bin/proot-distro && -e ${DISTRO_DIR}/usr/bin/code-server ]] ; then
-	tell i  "launching code-server by ubuntu proot!"
-	proot-distro login ubuntu -- code-server $1 & sleep 7 ; am start --user 0 -n org.chromium.webapk.a18f37c7c4dc2dd10_v2/org.chromium.webapk.shell_apk.h2o.H2OTransparentLauncherActivity
-	tell s "code-server successfully launched."
-else
-	[ ! -e $PREFIX/bin/proot-distro ] &&
-	tell f "ERROR: The 'proot-distro' package is not installed. To run Ubuntu distro, please install it." && 
-	tell d "USAGE: 'pkg install proot-ditro' to install proot-distro"
-	echo
-	[ ! -e ${DISTRO_DIR} ] &&
-	tell f "ERROR: 'ubuntu' distro is not installed. To run code-server, please install it." &&
-	tell d "USAGE: 'proot-distro install ubuntu' to install Ubuntu distro"
-	echo
-	[ ! -e ${DISTRO_DIR}/usr/bin/code-server ] &&
-	tell f "ERROR: 'code-server' package is not installed on ubuntu distro." &&
-	tell d "USAGE: proot-distro login ubuntu -- apt update && proot-distro login ubuntu -- apt install code-server \n     to install code-server in Ubuntu distro."
-fi
+	web(){
+		local proces_name=node
+		local proces_dir=/usr/lib/code-server/out/node/entry
+		local servername=localhost:8080 # default code-server's HTTP SERVER
+		while true ; do
+		local pid=$(pgrep -f ".*$proces_name.*$proces_dir")
+			if [[ -n ${pid} ]] ; then
+				while true ; do
+					if curl --head --silent --fail ${servername} 2> /dev/null ; then
+						am start --user 0 -n org.chromium.webapk.a18f37c7c4dc2dd10_v2/org.chromium.webapk.shell_apk.h2o.H2OTransparentLauncherActivity
+						break
+					else
+						[ "$1" == "-v" ] && tell f "code-server's HTTP server not listed on ${servername}"
+					fi
+					sleep 1
+				done
+				break
+			fi
+		done
+		unset pid
+	}
+
+	cs(){
+		if [[ -e ${PREFIX}/bin/proot-distro && -e ${DISTRO_DIR}/usr/bin/code-server ]] ; then
+			tell i  "launching code-server by ubuntu proot!"
+			proot-distro login ubuntu -- code-server $1
+			# tell s "code-server successfully launched."
+		else
+			[ ! -e $PREFIX/bin/proot-distro ] &&
+			tell f "ERROR: The 'proot-distro' package is not installed. To run Ubuntu distro, please install it." && 
+			tell d "USAGE: 'pkg install proot-ditro' to install proot-distro"
+			
+			[ ! -e ${DISTRO_DIR} ] &&
+			tell f "ERROR: 'ubuntu' distro is not installed. To run code-server, please install it." &&
+			tell d "USAGE: 'proot-distro install ubuntu' to install Ubuntu distro"
+
+			[ ! -e ${DISTRO_DIR}/usr/bin/code-server ] &&
+			tell f "ERROR: 'code-server' package is not installed on ubuntu distro." &&
+			tell d "USAGE: proot-distro login ubuntu -- apt update && proot-distro login ubuntu -- apt install code-server \n     to install code-server in Ubuntu distro."
+		fi
+	}
+	$@
 }
 
 stop (){
@@ -40,8 +55,8 @@ pkill -x node
 
 case $1 in
 -q ) stop ;;
--s ) start $2 ;;
--l ) web_launcher ;;
+-s ) start cs $2 & start web ;;
+-l ) start web -v ;;
 * )
  echo " 	thats programme help to easy to launch vsode server(code-server)
 	launcher command:
