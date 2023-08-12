@@ -90,7 +90,13 @@ remove_launcher() {
     fi
 }
 apk_installer (){
-	xdg-open app/code-server_1.apk
+	if  ! command -v xdg-open >/dev/null ; then
+		pkg_installer xdg-utils &&
+		xdg-open app/code-server_1.apk
+	else
+		# for more info  goto: https://command-not-found.com/xdg-open
+		xdg-open app/code-server_1.apk
+	fi
 }
 help() {
     echo "
