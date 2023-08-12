@@ -212,7 +212,7 @@ apk_installer(){
 
 help(){
 	echo "
-this is code-server launcher manager installer, that help to install code-server web-server/app launcher
+	code-server launcher manager, that help to install code-server browser/application launcher
 		
 USAGE : $0 [OPTION] [SUB-OPION]
 
