@@ -102,3 +102,12 @@ rm -rf $RPEFIX/bin/cs $PREFIX/bin/codeserver ~/.roms/cs
 
 > **Note:** If you want to proceed with the uninstallation without any prompts, use `-y` as the third argument for pre-confirmation.
 
+##### 4: tools/repo
+
+###### 4.1: third-party
+- [code-server](https://github.com/coder/code-server)
+- [proot-distro](https://github.com/termux/proot-distro)
+
+###### 4.2 own/official
+- ROMs-ui(private repo)
+- ROMs-bash-addon(private repo)
