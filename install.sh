@@ -1,5 +1,6 @@
 #!/bin/bash
 source rom_ui
+source roms_bash_plugin
 CS_LAUNCHER=${PREFIX}/bin/codeserver
 CS_SHORTCUT=${PREFIX}/bin/cs
 STYLE_DIR=~/.roms/bash/rom_ui
@@ -28,7 +29,6 @@ installer (){
 		done
 	}
 	proot_installer(){
-
 		if [ ! -d $PREFIX/var/lib/proot-distro/installed-rootfs/ubuntu ] ; then
 			pkg_installer proot-distro
 			if proot-distro install ubuntu ;then
