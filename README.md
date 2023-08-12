@@ -70,7 +70,7 @@ Here is the working summary of each option:
   For more information about Termux's variant, please visit the official [website](https://coder.com/docs/code-server/latest/termux).
 
 
-### 1.3: Install Web-Server Browser Launcher
+### 2.2: Install Web-Server Browser Launcher
 
 Install the code-server launcher using the following command:
 
@@ -78,7 +78,7 @@ Install the code-server launcher using the following command:
 ./install.sh -i --launcher
 ```
 
-### 1.4: Install Web-Server Browser APK
+### 2.3: Install Web-Server Browser APK
 
 Install the web-server APK or browser by executing the following command:
 
@@ -86,7 +86,7 @@ Install the web-server APK or browser by executing the following command:
 ./install.sh -i --apk
 ```
 
-## Uninstallation
+## 3: Uninstallation
 
 Please note that this command only removes the code-server launcher (`cs`, `codeserver`), not the code-server package itself.
 
@@ -101,3 +101,4 @@ rm -rf $RPEFIX/bin/cs $PREFIX/bin/codeserver ~/.roms/cs
 ```
 
 > **Note:** If you want to proceed with the uninstallation without any prompts, use `-y` as the third argument for pre-confirmation.
+
