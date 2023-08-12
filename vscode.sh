@@ -48,9 +48,9 @@ start (){
 }
 
 stop (){
-task_list="$(pgrep -x node 2>/dev/null)"
-[ -z "$task_list" ] && tell f "code-server is not running in background" 
-pkill -x node
+PID="$(pgrep -l code-server 2>/dev/null)"
+[[ -z $PID ]] && tell f "code-server is not running in background!" && exit
+[[ -n $PID ]] && pkill -f code-server && tell s "All code-server processes killed."
 }
 
 case $1 in
