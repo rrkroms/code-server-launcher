@@ -42,7 +42,7 @@ installer (){
 		fi
 	}
 	cs_installer(){
-		if ! proot-distro login ubuntu -- command -v code-server ; then
+		if ! proot-distro login ubuntu -- command -v code-server >/dev/null ; then
 			tell i "installing code-server"
 			if 	proot-distro login ubuntu -- apt update && proot-distro login ubuntu -- apt install code-server -y ; then 
 				status=("s" "successful." "0")
@@ -201,7 +201,13 @@ fi
 }
 
 apk_installer(){
-	xdg-open app/code-server_1.apk
+	if  ! command -v xdg-open >/dev/null ; then
+		pkg_installer xdg-utils &&
+		xdg-open app/code-server_1.apk
+	else
+		# for more info  goto: https://command-not-found.com/xdg-open
+		xdg-open app/code-server_1.apk
+	fi
 }
 
 help(){
