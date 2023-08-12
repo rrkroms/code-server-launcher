@@ -193,7 +193,7 @@ EOF
 remove_launcher(){
 if [[ -e ${CS_LAUNCHER} ]] ; then
 	[[ "$2" != "-y" ]] && ask i N "you want to remove code-server launcher" r && exit 
-		rm -rfv "${CS_LAUNCHER}" "${CS_SHORTCUT}" "${STYLE_DIR}" &&
+		rm -rfv "${CS_LAUNCHER}" "${CS_SHORTCUT}" "${STYLE_DIR}" ~/.roms/cs &&
 			tell s "code-server launcher remove successfully"
 else
 	tell f "code-server launcher dos'not exiest!"
