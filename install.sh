@@ -129,7 +129,7 @@ create_launcher() {
 			}
 			cs(){
 				if [[ -e \${PREFIX}/bin/\${CHROOT_LAUNCHER} && -e \${CHROOT_DIR}/usr/bin/code-server ]] ; then
-					tell i "launching code-server by ${CHROOT_NAME} proot!"
+					tell i "launching code-server" 
 					\${CHROOT_LAUNCHER_COM} code-server \$1
 					# tell s "code-server successfully launched."
 				else
