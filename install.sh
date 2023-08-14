@@ -210,7 +210,7 @@ apk_installer() {
 
 help() {
  echo "
-	code-server launcher manager, that help to install code-server browser/application launcher
+	Code-Server Launcher Manager helps you install Code-Server with its browser/application launcher.
 		
 USAGE : $0 [OPTION] [SUB-OPION]
 
