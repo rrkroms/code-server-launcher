@@ -177,7 +177,7 @@ create_launcher() {
 			--help ) help ;;
 			*) tell d "usage: cs --help for help" ;;
 		esac
- EOF
+EOF
 
  chmod 700 $CS_LAUNCHER
  [ -L ${CS_SHORTCUT} ] && rm -f ${CS_SHORTCUT}
