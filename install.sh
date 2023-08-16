@@ -83,30 +83,60 @@ create_launcher() {
 			source ~/.roms/bash/rom_ui
 
 			config(){
-				create(){
-					local package=\$1
-					[ -z \$package ] && input d "inter apk package name: " "package"
-					[ "\$package" == "\${APK_PKG_NAME}" ] && tell f "package name already exiest" && exit
+				default() {
+					if [ ! -e \$CFG_DIR ] ; then 
+						mkdir -p \$CFG_DIR/ && tell s "created configurantion DIRECTORY."
+					fi
+						if [[ ! -e \$CFG_DIR/.config && -z \$APK_PKG_NAME ]] ; then
+						echo "package_name: \$DEFUALT_LAUNCHER_PKG_NAME" > \$CFG_DIR/.config &&
+						tell s "configure default APK package name."
+					fi
+				}
+					#call configuration function
+					default
+				set_cfg(){
 
-					[ -n \${APK_PKG_NAME} ] && sed -i "s/^package_name:.*/package_name: \$package/" "\$CFG_DIR/.config" ||
-					echo "package_name: \$package" >> \$CFG_DIR/.config &&
-			    	tell s "added package name: \$package "
+					set_apn(){
+						
+						while [ -z \$package ] ; do
+						 	input d "inter apk package name: " "package"
+						done
+						[[ ! -z \$package && "\$package" == "\${APK_PKG_NAME}" ]] && tell f "APN(APK package name) already exiest" && exit
+
+						if [ ! -z \${APK_PKG_NAME} ] ; then
+							sed -i "s/^package_name:.*/package_name: \$package/" "\$CFG_DIR/.config" &&
+							tell d "\${APK_PKG_NAME} >>> \$package"
+						else
+							echo "package_name: \$package" >> \$CFG_DIR/.config &&
+			    			tell s "added package name: \$package "
+						fi
+					}
+					if [[ \$# -ge 0 ]] ; then
+						case \$1 in
+							--set-default-apn) local package="\$DEFUALT_LAUNCHER_PKG_NAME" ; set_apn ;;
+							--set-apn) local package="\$2" ; set_apn ;;
+							*) tell i "worng argument use : cs -cs --help" ; exit ;;
+						esac
+					fi
 				}
 
 				reset (){
 					rm -rf ~/.roms/cs && tell s "configuration successfuly reset" && exit
 				}
-				\$@
-				if [ ! -e \$CFG_DIR ] ; then 
-					mkdir -p \$CFG_DIR/ && tell s "created configurantion DIRECTORY."
-				fi
-					if [[ ! -e \$CFG_DIR/.config && -z \$APK_PKG_NAME ]] ; then
-					echo "package_name: \$DEFUALT_LAUNCHER_PKG_NAME" > \$CFG_DIR/.config &&
-					tell s "configure apk default package name."
-				fi
+				
+				case \$1 in
+					-cs) set_cfg \$2 \$3 ;;
+					--cfg ) default ;;
+					*r) reset;;
+					*v) [ ! -z \${APK_PKG_NAME} ] && tell d "\${APK_PKG_NAME}" || tell f "APK Package Name not set.";;
+					*) tell i "usage: cs -c --help"
+				esac
 			}
 		start (){
 			web(){
+				#call to config function to set default configuration
+				config --cfg && APK_PKG_NAME=\$(grep -oP '^package_name: \K(.*)' \$CFG_DIR/.config 2>/dev/null)
+
 				local proces_name=node
 				local tar_dir=/usr/lib/code-server/lib/vscode/out/bootstrap-fork
 				local pid=\$(pgrep -f ".*$process_name.*$tar_dir")
@@ -172,8 +202,7 @@ create_launcher() {
 			-q ) stop ;;
 			-s ) start cs \$2 & start web ;;
 			-l ) start web -v ;;
-			-c ) config create \$2 ;;
-			-cr ) config reset \$2;;
+			-c*) config \$@;;
 			--help ) help ;;
 			*) tell d "usage: cs --help for help" ;;
 		esac
