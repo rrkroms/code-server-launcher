@@ -83,21 +83,13 @@ create_launcher() {
 			source ~/.roms/bash/rom_ui
 
 			config(){
-				default() {
-					if [ ! -e \$CFG_DIR ] ; then 
-						mkdir -p \$CFG_DIR/ && tell s "created configurantion DIRECTORY."
-					fi
-						if [[ ! -e \$CFG_DIR/.config && -z \$APK_PKG_NAME ]] ; then
-						echo "package_name: \$DEFUALT_LAUNCHER_PKG_NAME" > \$CFG_DIR/.config &&
-						tell s "configure default APK package name."
-					fi
-				}
-					#call configuration function
-					default
+				
 				set_cfg(){
 
 					set_apn(){
-						
+						if [ ! -e \$CFG_DIR ] ; then 
+							mkdir -p \$CFG_DIR/ && tell s "created configurantion DIRECTORY."
+						fi
 						while [ -z \$package ] ; do
 						 	input d "inter apk package name: " "package"
 						done
@@ -107,8 +99,12 @@ create_launcher() {
 							sed -i "s/^package_name:.*/package_name: \$package/" "\$CFG_DIR/.config" &&
 							tell d "\${APK_PKG_NAME} >>> \$package"
 						else
-							echo "package_name: \$package" >> \$CFG_DIR/.config &&
-			    			tell s "added package name: \$package "
+							echo "package_name: \$package" >> \$CFG_DIR/.config
+							if [[ -z \${APK_PKG_NAME} && \$package == \$DEFUALT_LAUNCHER_PKG_NAME ]] ; then
+								tell s "configure default APK package name."
+							else
+			    				tell s "added package name: \$package "
+							fi
 						fi
 					}
 					if [[ \$# -ge 0 ]] ; then
@@ -134,8 +130,8 @@ create_launcher() {
 			}
 		start (){
 			web(){
-				#call to config function to set default configuration
-				config --cfg && APK_PKG_NAME=\$(grep -oP '^package_name: \K(.*)' \$CFG_DIR/.config 2>/dev/null)
+				# This line of code triggers the configuration function to set the APN default configuration if the APK Package Name (APN) does not exist in the config file.
+				[ -z \${APK_PKG_NAME} ] && config -cs --set-default-apn && APK_PKG_NAME=\$(grep -oP '^package_name: \K(.*)' \$CFG_DIR/.config 2>/dev/null)
 
 				local proces_name=node
 				local tar_dir=/usr/lib/code-server/lib/vscode/out/bootstrap-fork
