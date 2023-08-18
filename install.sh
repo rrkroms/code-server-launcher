@@ -117,8 +117,16 @@ create_launcher() {
 				}
 
 				reset (){
+					if [ "\$1" == "-crv" ] ; then
+						local option="-rfv"
+					elif [ "\$1" == "-cr" ] ; then
+						local option="-rf"
+					else
+						tell i "usage: cs -c --help" ; return 1
+					fi
+					
 					if [ -e ~/.roms/cs ] ;then
-						rm -rf ~/.roms/cs &&
+						rm "\$option" ~/.roms/cs &&
 						tell s "configuration successfuly reset." && exit
 					else
 						tell f "configuration not exiest."
@@ -127,8 +135,7 @@ create_launcher() {
 				
 				case \$1 in
 					-cs) set_cfg \$2 \$3 ;;
-					--cfg ) default ;;
-					*r) reset;;
+					*r*) reset \$@ ;;
 					*v) [ ! -z \${APK_PKG_NAME} ] && tell d "\${APK_PKG_NAME}" || tell f "APK Package Name not set.";;
 					*) tell i "usage: cs -c --help"
 				esac
