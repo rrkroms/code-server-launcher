@@ -117,9 +117,9 @@ create_launcher() {
 				}
 
 				reset (){
-					if [[ "\$1" == "-crv" || "\$1" == "-cvr" || "\$2" == "--verbose" ]] ; then
+					if [[ \$# -eq 1 && "\$1" == "-crv" || \$# -eq 1 && "\$1" == "-cvr" || \$# -eq 2 && "\$@" == "-cr --verbose" ]] ; then
 						local option="-rfv"
-					elif [ "\$1" == "-cr" ] ; then
+					elif [[ "\$1" == "-cr" && \$# -eq 1 ]] ; then
 						local option="-rf"
 					else
 						tell i "usage: cs -c --help" ; return 1
