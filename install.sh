@@ -132,11 +132,20 @@ create_launcher() {
 						tell f "configuration not exiest."
 					fi
 				}
-
+				help(){
+					echo " 
+					cs-launcher [-c] or configuration sub-options.
+					sub-option 	meaning
+					s			configure APK Package Name(APK)
+					r			reset configure files  | v, --verbose  view reset command progress
+					v			view APN
+					"
+				}
 				case \$1 in
 					*s) set_cfg \$2 \$3 ;;
 					*r*) reset \$@ ;;
 					*v) [ ! -z \${APK_PKG_NAME} ] && tell d "\${APK_PKG_NAME}" || tell f "APK Package Name not set.";;
+					-c ) help;;
 					*) tell i "usage: cs -c --help"
 				esac
 			}
