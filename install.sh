@@ -107,10 +107,24 @@ create_launcher() {
 							fi
 						fi
 					}
+					help(){
+						echo "
+						Require the APK Package Name (APN) to launch the code-server's viewer APK.
+
+						USAGE: cs -cs [sub-option] [APN]
+						
+						sub-option 			meaning
+						--set-default-apn		set default APN(APK Package Name)
+						--set-apn			set custom APN 
+
+						tip: add APN after "--set-apn" options
+						"
+					}
 					if [[ \$# -ge 0 ]] ; then
 						case \$1 in
 							--set-default-apn) local package="\$DEFUALT_LAUNCHER_PKG_NAME" ; set_apn ;;
 							--set-apn) local package="\$2" ; set_apn ;;
+							--help) help;;
 							*) tell i "worng argument use : cs -cs --help" ; exit ;;
 						esac
 					fi
