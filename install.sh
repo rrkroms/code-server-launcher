@@ -117,7 +117,12 @@ create_launcher() {
 				}
 
 				reset (){
-					rm -rf ~/.roms/cs && tell s "configuration successfuly reset" && exit
+					if [ -e ~/.roms/cs ] ;then
+						rm -rf ~/.roms/cs &&
+						tell s "configuration successfuly reset." && exit
+					else
+						tell f "configuration not exiest."
+					fi
 				}
 				
 				case \$1 in
