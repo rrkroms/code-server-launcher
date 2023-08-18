@@ -117,7 +117,7 @@ create_launcher() {
 				}
 
 				reset (){
-					if [ "\$1" == "-crv" ] ; then
+					if [[ "\$1" == "-crv" || "\$1" == "-cvr" || "\$2" == "--verbose" ]] ; then
 						local option="-rfv"
 					elif [ "\$1" == "-cr" ] ; then
 						local option="-rf"
@@ -132,9 +132,9 @@ create_launcher() {
 						tell f "configuration not exiest."
 					fi
 				}
-				
+
 				case \$1 in
-					-cs) set_cfg \$2 \$3 ;;
+					*s) set_cfg \$2 \$3 ;;
 					*r*) reset \$@ ;;
 					*v) [ ! -z \${APK_PKG_NAME} ] && tell d "\${APK_PKG_NAME}" || tell f "APK Package Name not set.";;
 					*) tell i "usage: cs -c --help"
