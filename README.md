@@ -130,6 +130,10 @@ cs -cs --set-apn [APN]
  ```bash
  cs -cr
  ```
+ Alternatively, you can reset the configuration by deleting the "configuration" directory.
+ ```
+ rm -rf ~/.roms/cs
+ ```
 
 ### 3.3: start/stop code-server & web viewer
 
