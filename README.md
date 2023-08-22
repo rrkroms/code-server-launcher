@@ -48,8 +48,7 @@ If installation fails, visit the code-server official website [coder.com](https:
 ```
 
 Output:
-
-```bash
+```
 ~/code-server $ ./install.sh -i
 Which type of environment do you want for code-server?
 1. proot (recommended)
@@ -85,8 +84,72 @@ Install the web-server APK or browser by executing the following command:
 ```bash
 ./install.sh -i --apk
 ```
+## 3: Usage
 
-## 3: Uninstallation
+### 3.1: option's chat
+
+| option | long-option | work/meaning | usage |
+| ------ | ------ | ------ | ------ |
+| s | | start code-server with cs-viewer | cs -s |
+| l | | launch code-server viwer| cs -l |
+| c | | configure cs-launcher | cs -c[sub-option] |
+
+#### 3.1.1: configuration sub-options
+| option | long-option | work/meaning | usage |
+| ------ | ------ | ------ | ------ |
+| r | | reset/remove configuration | cs -cr |
+| s | | set APN | cs -cs |
+| v | | view APN | cs -cv] |
+
+### 3.2: Configuration
+
+Configure cs-launcher before using it. If you execute the launch command of the code-server viewer, cs-launcher will configure the default configuration.
+
+#### 3.2.1 set configuration
+
+*Q.: What is APN?*
+*Ans.: APN stands for APK Package Name. It helps to launch the code-server viewer in Android.*
+
+To configure CS Launcher, simply run the following command: `cs -cs [sub-option]`
+Sub-options:
+  - `--set-default-apn` : Set default APN 
+  - `--set-apn` : Set custom APN
+
+To set default APN configuration, simply use the `--set-default-apn` sub-option:
+```bash
+cs -cs --set-default-apn
+```
+
+If you have other APN or APK, then use the `--set-apn` sub-option:
+```bash
+cs -cs --set-apn [APN]
+```
+#### 3.2.2: reset/remove configuration
+ 
+ to reset/remove condiguration simply use the `r` sub-option with `-c`:
+ ```bash
+ cs -cr
+ ```
+
+### 3.3: start/stop code-server & web viewer
+
+To run code-server with CS Launcher, simply execute the following command:
+```bash
+cs -s
+```
+This command will run code-server and then launch the default code-server viewer.
+
+to stop code-server , simply execut the following command:
+```bash
+cs -q
+```
+
+To launch the default code-server viewer app, run the following command:
+```bash
+cs -l
+```
+
+## 4: Uninstallation
 
 Please note that this command only removes the code-server launcher (`cs`, `codeserver`), not the code-server package itself.
 
@@ -102,12 +165,12 @@ rm -rf $RPEFIX/bin/cs $PREFIX/bin/codeserver ~/.roms/cs
 
 > **Note:** If you want to proceed with the uninstallation without any prompts, use `-y` as the third argument for pre-confirmation.
 
-##### 4: tools/repo
+##### 5: tools/repo
 
-###### 4.1: third-party
+###### 5.1: third-party
 - [code-server](https://github.com/coder/code-server)
 - [proot-distro](https://github.com/termux/proot-distro)
 
-###### 4.2 own/official
+###### 5.2 own/official
 - ROMs-ui(private repo)
 - ROMs-bash-addon(private repo)
