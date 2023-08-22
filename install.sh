@@ -154,12 +154,16 @@ create_launcher() {
 					r			reset configure files  | v, --verbose  view reset command progress
 					v			view APN
 					"
+					exit
 				}
+				# case \$2 in 
+				# --help ) help;;
+				# esac
 				case \$1 in
 					*s) set_cfg \$2 \$3 ;;
 					*r*) reset \$@ ;;
 					*v) [ ! -z \${APK_PKG_NAME} ] && tell d "\${APK_PKG_NAME}" || tell f "APK Package Name not set.";;
-					-c ) help;;
+					-c ) [[ ! -z "\$2" && "\$2" == "--help" ]] && help || tell i "usage: cs -c --help";;
 					*) tell i "usage: cs -c --help"
 				esac
 			}
