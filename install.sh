@@ -199,7 +199,7 @@ create_launcher() {
 					# tell s "code-server successfully launched."
 				else
 					[ ! -e \$PREFIX/bin/\${CHROOT_LAUNCHER} ] &&
-					tell f " proot ${CHROOT_NAME} not exit" &&
+					tell f " proot ${CHROOT_NAME} not found" &&
 
 					[ ! -e '${CHROOT_DIR}/bin/code-server' ] &&
 					echo "${CHROOT_DIR}/bin/code-server"
