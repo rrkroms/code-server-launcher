@@ -173,10 +173,10 @@ create_launcher() {
 				[ -z \${APK_PKG_NAME} ] && config -cs --set-default-apn && APK_PKG_NAME=\$(grep -oP '^package_name: \K(.*)' \$CFG_DIR/.config 2>/dev/null)
 
 				local proces_name=node
-				local tar_dir=/usr/lib/code-server/lib/vscode/out/bootstrap-fork
-				local pid=\$(pgrep -f ".*$process_name.*$tar_dir")
+				local tar_dir=/usr/lib/code-server/out/node/entry
 				local servername=localhost:8080
 				while true ; do
+				local pid=\$(pgrep -f ".*\$proces_name.*\$tar_dir")
 					if [[ -n \${pid} ]] ; then
 						while true ; do
 							if curl --head --silent --fail \${servername} 2> /dev/null ; then
